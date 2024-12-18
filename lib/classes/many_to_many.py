@@ -31,13 +31,17 @@ class Article:
 class Author:
     def __init__(self, name):
         if isinstance(name, str) and len(name) > 0:
-            self._name=name
+            self._name = name
         else:
-            print("Name must be a string longer than 0 characters")
+            raise ValueError("Name must be a string longer than 0 characters.")
 
     @property
     def name(self):
         return self._name
+
+    @name.setter
+    def name(self, value):
+        print("Name is immutable and cant be changed.")
 
     def articles(self):
         return [article for article in Article.all if article.author == self]
@@ -108,3 +112,8 @@ class Magazine:
         result = [author for author, count in author_counts.items() if count >2]
         return result if result else None
     
+    @classmethod
+    def top_publisher(cls):
+        if not cls.all:
+            return None
+        return max(cls.all, key=lambda magazine: len(magazine.articles()), default=None)
